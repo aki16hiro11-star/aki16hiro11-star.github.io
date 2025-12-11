@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>学食計算機</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
+      background: #f5f5f5;
+      padding: 1rem;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .total-box {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+    .total-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 0.3rem;
+    }
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .item-button {
+      flex: 1 1 calc(50% - 0.5rem);
+      min-width: 120px;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .item-button:active {
+      transform: translateY(1px);
+    }
+    .item-label {
+      font-weight: 600;
+    }
+    .item-price {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .clear-button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      background: #ffdddd;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>学食計算機</h1>
+
+<div class="total-box">
+  <div>合計</div>
+  <div id="total" class="total-value">0 円</div>
+
+  <!-- クリアボタンはここに置いておくと確実に見える -->
+  <button id="clearBtn" class="clear-button">クリア</button>
+
+  <!-- ボタン群 -->
+  <div class="button-grid" id="buttonGrid"></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // ★指定値段10個で構成された items 配列★
+    var items = [
+      { label: "Item1",  price: 385 },
+      { label: "Item2",  price: 341 },
+      { label: "Item3",  price: 297 },
+      { label: "Item4",  price: 253 },
+      { label: "Item5",  price: 209 },
+      { label: "Item6",  price: 143 },
+      { label: "Item7",  price: 132 },
+      { label: "Item8",  price: 99  },
+      { label: "Item9",  price: 77  },
+      { label: "Item10", price: 44  }
+    ];
+
+    var total = 0;
+
+    var totalEl  = document.getElementById("total");
+    var gridEl   = document.getElementById("buttonGrid");
+    var clearBtn = document.getElementById("clearBtn");
+
+    function formatYen(val) {
+      return val.toLocaleString("ja-JP") + " 円";
+    }
+
+    function update() {
+      totalEl.textContent = formatYen(total);
+    }
+
+    function addItem(item) {
+      total += item.price;
+      update();
+    }
+
+    function clearAll() {
+      total = 0;
+      update();
+    }
+
+    // ボタン生成
+    for (var i = 0; i < items.length; i++) {
+      (function (item) {
+        var btn = document.createElement("button");
+        btn.className = "item-button";
+
+        btn.innerHTML =
+          '<div class="item-label">' + item.label + '</div>' +
+          '<div class="item-price">' + formatYen(item.price) + '</div>';
+
+        btn.addEventListener("click", function () {
+          addItem(item);
+        });
+
+        gridEl.appendChild(btn);
+      })(items[i]);
+    }
+
+    clearBtn.addEventListener("click", clearAll);
+
+    update();
+  });
+</script>
+
+</body>
+</html>
